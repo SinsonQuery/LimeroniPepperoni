@@ -1,20 +1,24 @@
+//sorry i am schitzophrenic
 (function() {
-
+  // Arrays for easy modification
   const humiliateNames = ['dumb', 'i failed to hack you', 'loser', 'slow', 'pooperoni', 'fatstack', 'dung eater', 'daddys girl', 'daddys boy', 'dump truck', 'public stool', 'isaacs toilet', 'heihos seat', 'heihos lover', 'isaacool fan', 'dumbass', 'lonely', 'creep', 'toilet licker', 'shit ass', 'i love you', 'touch me', 'racist', 'soyboy', 'logan'];
   const humiliateTexts = ['i pooped my pants', 'my wee wee small', 'hack failed. scanning brain.... 0% intelligence found.', 'my asshole burns', 'be patient, i have down syndrome', 'i have a crush on you', 'sometimes i feel like theres a little girl in me', 'sometimes when im lonely i put my dick on bologne', 'i want you so baddd...', 'hitler did nothing wrong', 'add me on discord and send me nudes'];
 
+  // Inject styles
   const style = document.createElement('style');
   style.innerHTML = `
-
+    /* Flash effects */
     .gi-flash, .gi-red-flash { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; animation:gi-flash 0.5s ease-out; }
     .gi-flash { background: rgba(0,255,0,0.5); }
     .gi-red-flash { background: rgba(255,0,0,0.5); }
     @keyframes gi-flash { 0% { opacity:1; } 100%{ opacity:0; } }
 
+    /* Glitch overlay and twitch dialogue */
     .gi-glitch { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index:10000; }
     .dialogue { position:fixed; top:40%; width:100%; text-align:center; color:#f00; font-size:32px; font-family:sans-serif; z-index:10001; white-space:pre; animation:twitch 0.1s infinite alternate; }
     @keyframes twitch { from{transform:translate(0,0);} to{transform:translate(2px,-2px);} }
 
+    /* Core UI */
     .gi-interface { position:absolute; background:#111; border:2px solid #0f0; box-shadow:0 0 10px #0f0; border-radius:8px; }
     .gi-header { background:#000; color:#0f0; cursor:grab; padding:5px; display:flex; justify-content:space-between; user-select:none; }
     .gi-close { cursor:pointer; color:#f00; }
@@ -22,10 +26,12 @@
     .gi-button { margin:5px 0; padding:5px; background:#0f0; color:#000; cursor:pointer; text-align:center; }
     .gi-input { width:100%; padding:5px; background:#222; color:#0f0; border:1px solid #0f0; }
 
+    /* QTE overlay */
     .qte-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow:hidden; }
     .qte-char { position:absolute; font-size:32px; color:#fff; }
     .fail-line { position:absolute; top:0; left:0; width:2px; height:100%; background:red; z-index:10000; }
 
+    /* Wheel */
     .wheel-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10003; display:flex; align-items:center; justify-content:center; }
     .wheel { position:relative; width:300px; height:300px; }
     .wheel-canvas { background:#fff; border-radius:50%; }
@@ -133,12 +139,14 @@
     const segments = ['Translate','Death','Humiliate'];
     const n = segments.length;
 
+    // Clear & white background
     ctx.clearRect(0, 0, 300, 300);
     ctx.fillStyle = '#fff';
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, 2*Math.PI);
     ctx.fill();
 
+    // Draw dividing lines
     ctx.strokeStyle = '#000';
     for (let i = 0; i < n; i++) {
       const ang = i * 2*Math.PI/n;
@@ -148,6 +156,7 @@
       ctx.stroke();
     }
 
+    // Draw labels
     ctx.fillStyle = '#000';
     ctx.textAlign = 'center';
     ctx.font = '16px sans-serif';
@@ -160,10 +169,12 @@
       ctx.restore();
     }
 
+    // Pointer arrow
     const ptr = document.createElement('div');
     ptr.className = 'wheel-pointer';
     wheelDiv.appendChild(ptr);
 
+    // Choose and spin
     const choice = Math.floor(Math.random() * n);
     const angle = 360*3 + (choice*360/n + 180/n);
     canvas.style.transition = 'transform 3s ease-out';
@@ -175,6 +186,7 @@
     canvas.addEventListener('transitionend', function handler() {
       canvas.removeEventListener('transitionend', handler);
 
+      // Highlight chosen slice
       const mid = choice*2*Math.PI/n + Math.PI/n;
       ctx.save();
       ctx.translate(cx, cy);
@@ -210,7 +222,7 @@
     const elements = [...document.querySelectorAll('.gi-header span, .gi-button, .gi-input')];
     const originals = elements.map(el => el.textContent);
     const translations = await Promise.all(elements.map(el =>
-      fetch(`https:
+      fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(el.textContent)}`)
         .then(res => res.json())
         .then(data => data[0].map(p => p[0]).join(''))
     ));
@@ -272,8 +284,7 @@
     btn.className = 'gi-button';
     btn.textContent = txt;
     if (isTranslating) {
-
-      fetch(`https:
+      fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(txt)}`)
         .then(res => res.json())
         .then(data => {
           btn.textContent = data[0].map(p => p[0]).join('');
@@ -309,13 +320,13 @@
           if (['663b68152e9a99760000008c','66142bb0108c291a00000027'].includes(key)) {
             return createDeathDialog();
           }
-
+          // store original
           state.original = {
             screenName: ig.game.O4269.screenName,
             id: ig.game.O4269.attachments.b.id
           };
           ig.game.O4349.O2137(p.screenName);
-
+          //ig.game.O4269.screenName = p.screenName;
           ig.game.O7510.O4416(ig.game.O4269, ig.game.O7510.slots.BODY, p.attachments.b.id, null, 'STACKWEARB');
         });
       }, body);
