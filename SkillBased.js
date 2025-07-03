@@ -284,6 +284,7 @@
     btn.className = 'gi-button';
     btn.textContent = txt;
     if (isTranslating) {
+      // live-translate button text while menu is in Chinese
       fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(txt)}`)
         .then(res => res.json())
         .then(data => {
